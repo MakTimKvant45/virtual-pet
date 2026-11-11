@@ -116,6 +116,35 @@ def display_pet(pet: dict):
 
     print("=" * 45 + "\n")
 
+def run_tests():
+    print("Запуск автоматических тестов...")
+
+    # Создание и кормление
+    pet = create_pet("Барсик", "кот")
+    assert pet["name"] == "Барсик", "Ошибка имени"
+    assert pet["happiness"] == 55, "Ошибка бонуса кота (50 + 5)"
+
+    pet = apply_action(pet, "1")  # покормить
+    assert pet["hunger"] == 80, "Ошибка: сытость должна стать 80"
+
+    # Перекорм
+    pet["hunger"] = 90
+    pet = apply_action(pet, "1")
+    assert pet["hunger"] == 100, "Сытость не должна превышать 100"
+    assert pet["health"] < 100, "При перекорме здоровье должно упасть"
+
+    # Эволюция до взрослого
+    pet = create_pet("Тест", "собака")
+    pet["age"] = 30
+    for stat in ["hunger", "happiness", "cleanliness", "energy", "health"]:
+        pet[stat] = 80
+    assert check_evolution(pet) == "взрослый", "Ошибка эволюции"
+
+    # Гибель питомца
+    pet["health"] = 0
+    assert check_evolution(pet) == "ушёл из жизни", "Питомец должен 'умереть'"
+
+    print("Все тесты пройдены!\n")
 
 def main():
     print("Виртуальный питомец")
@@ -173,4 +202,5 @@ def main():
 
 
 if __name__ == "__main__":
+    run_tests()
     main()
